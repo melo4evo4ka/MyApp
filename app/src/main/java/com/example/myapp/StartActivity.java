@@ -21,8 +21,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import com.bumptech.glide.Glide;
@@ -30,6 +32,7 @@ import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,7 +54,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private TextView userName;
     private CircleImageView circleImageView;
     private FirebaseUser firebaseUser;
@@ -80,11 +83,14 @@ public class StartActivity extends AppCompatActivity {
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         imagesList = new ArrayList<>();
         userName = findViewById(R.id.username);
         circleImageView = findViewById(R.id.profileImage);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
         storageReference = FirebaseStorage.getInstance().getReference("profile_images");
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -106,7 +112,9 @@ public class StartActivity extends AppCompatActivity {
                 Toast.makeText(StartActivity.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-    circleImageView.setOnClickListener(new View.OnClickListener() {
+
+
+        circleImageView.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
@@ -233,13 +241,20 @@ public class StartActivity extends AppCompatActivity {
         if (mToggle.onOptionsItemSelected(item)){
             return true;
         }
-
-        if (id == R.id.ddd1){
-            startActivity(new Intent(StartActivity.this,ChangePasswordActivity.class));
-        } else if (id == R.id.ddd5){
-            firebaseAuth.signOut();
-            startActivity(new Intent(StartActivity.this,MainActivity.class));
-            finish();
+        switch (id){
+            case R.id.drawer_menu_change_psw:
+                startActivity(new Intent(StartActivity.this,ChangePasswordActivity.class));
+                break;
+            case R.id.drawer_menu_add_event:
+                startActivity(new Intent(StartActivity.this,EventDBActivity.class));
+                break;
+            case R.id.drawer_menu_all_events:
+                startActivity(new Intent(StartActivity.this,EventListActivity.class));
+                break;
+            case R.id.drawer_menu_logout:
+                firebaseAuth.signOut();
+                startActivity(new Intent(StartActivity.this,MainActivity.class));
+                finish();
         }
         return true;
     }
@@ -264,4 +279,27 @@ public class StartActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.drawer_menu_change_psw:
+                startActivity(new Intent(StartActivity.this,ChangePasswordActivity.class));
+                break;
+            case R.id.drawer_menu_add_event:
+                startActivity(new Intent(StartActivity.this,EventDBActivity.class));
+                break;
+            case R.id.drawer_menu_all_events:
+                startActivity(new Intent(StartActivity.this,EventListActivity.class));
+                break;
+            case R.id.drawer_menu_logout:
+                firebaseAuth.signOut();
+                startActivity(new Intent(StartActivity.this,MainActivity.class));
+                finish();
+        }
+        return true;
+
+    }
 }

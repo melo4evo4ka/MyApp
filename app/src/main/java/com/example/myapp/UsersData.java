@@ -1,13 +1,12 @@
 package com.example.myapp;
 
-import java.util.HashMap;
-
 public class UsersData {
+    public String username;
     private String userId;
-    private String username;
     private String email;
     private String gender;
     private String imageUrl;
+
     private String mobile;
 
     public UsersData(String userId, String username, String email, String gender, String imageURL, String mobile) {

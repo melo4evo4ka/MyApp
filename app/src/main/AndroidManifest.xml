@@ -11,10 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MyMainSplanner"
-            android:label="@string/title_activity_my_main_splanner"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".EventListActivity"></activity>
+        <activity android:name=".EventDBActivity" />
         <activity android:name=".ChangePasswordActivity" />
         <activity android:name=".ForgetPasswordActivity" />
         <activity android:name=".StartActivity" />

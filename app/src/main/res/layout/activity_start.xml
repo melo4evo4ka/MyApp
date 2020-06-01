@@ -7,18 +7,33 @@
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity">
-    <include android:id="@+id/toolbar"
-        layout="@layout/profile_bar_layout"/>
+    tools:context=".StartActivity"
+    tools:viewBindingIgnore="true">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/profile_bar_layout" />
+    <FrameLayout
+        android:id="@+id/fl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp">
+     </FrameLayout>
     <com.google.android.material.navigation.NavigationView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/nav_view"
         android:background="@color/colorPrimaryDark"
         app:itemTextColor="@color/colorPrimary"
         app:itemIconTint="@color/colorPrimary"
         app:menu="@menu/drawer_menu"
         app:headerLayout="@layout/handler"
         android:layout_gravity="start">
+
     </com.google.android.material.navigation.NavigationView>
+
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
