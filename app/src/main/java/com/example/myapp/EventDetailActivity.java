@@ -1,5 +1,6 @@
 package com.example.myapp;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventDetailActivity  extends BaseActivity implements View.OnClickListener {
+public class EventDetailActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "EventDetailActivity";
 
     public static final String EXTRA_EVENT_KEY = "event_key";
@@ -35,24 +37,28 @@ public class EventDetailActivity  extends BaseActivity implements View.OnClickLi
     private DatabaseReference mCommentsReference;
     private ValueEventListener mEventListener;
     private CommentAdapter mAdapter;
-    public  RecyclerView recyclerEventComments;
-    public LinearLayout  eventAuthorLayout;
+    public RecyclerView recyclerEventComments1;
+    public LinearLayout eventAuthorLayout;
     public LinearLayout eventTextLayout;
+    public LinearLayout eventCommentLayout;
+
     public EditText fieldCommentText;
     public TextView eventTitle;
     public TextView eventBody;
     public TextView eventAuthor;
-    public MaterialButton buttonEventComment;
+    private Button buttonEventComment;
     private String mEventKey;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_event_detail);
         eventAuthorLayout = findViewById(R.id.eventAuthorLayout);
         eventTextLayout = findViewById(R.id.eventTextLayout);
-        buttonEventComment = findViewById(R.id.buttonEventComment);
-        recyclerEventComments = findViewById(R.id.recyclerEventComments);
+        eventCommentLayout = findViewById(R.id.commentForm);
+        buttonEventComment = findViewById(R.id.btnEventComment);
+        recyclerEventComments1 = findViewById(R.id.recyclerEventComments_view);
         fieldCommentText = findViewById(R.id.fieldCommentText);
         eventAuthor = findViewById(R.id.eventAuthor);
         eventTitle = findViewById(R.id.eventTitle);
@@ -71,9 +77,14 @@ public class EventDetailActivity  extends BaseActivity implements View.OnClickLi
         mCommentsReference = FirebaseDatabase.getInstance().getReference()
                 .child("event-comments").child(mEventKey);
 
-        buttonEventComment.setOnClickListener(this);
-        recyclerEventComments.setLayoutManager(new LinearLayoutManager(this));
-
+     /*   buttonEventComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                eventComment();
+            }
+        });
+       */
+        recyclerEventComments1.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -116,7 +127,7 @@ public class EventDetailActivity  extends BaseActivity implements View.OnClickLi
 
         // Listen for comments
         mAdapter = new CommentAdapter(this, mCommentsReference);
-        recyclerEventComments.setAdapter(mAdapter);
+        recyclerEventComments1.setAdapter(mAdapter);
     }
 
     @Override
@@ -132,17 +143,10 @@ public class EventDetailActivity  extends BaseActivity implements View.OnClickLi
         mAdapter.cleanupListener();
     }
 
-    @Override
-    public void onClick(View v) {
-        int i = v.getId();
-        if (i == R.id.buttonEventComment) {
-            eventComment();
-        }
-    }
 
     private void eventComment() {
         final String uid = getUid();
-        FirebaseDatabase.getInstance().getReference().child("users").child(uid)
+        FirebaseDatabase.getInstance().getReference().child("Users").child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -167,6 +171,11 @@ public class EventDetailActivity  extends BaseActivity implements View.OnClickLi
                     }
                 });
     }
+
+    public void onClick(View view) {
+        eventComment();
+    }
+
 
     private static class CommentViewHolder extends RecyclerView.ViewHolder {
 
@@ -308,6 +317,11 @@ public class EventDetailActivity  extends BaseActivity implements View.OnClickLi
                 mDatabaseReference.removeEventListener(mChildEventListener);
             }
         }
+
+    }
+
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
 
     }
 }
