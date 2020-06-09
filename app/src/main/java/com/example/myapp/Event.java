@@ -7,13 +7,13 @@ import java.util.Map;
 
 public class Event {
 
-        String uid;
-        String categoryEvent;
-        String nameEvent;
-        String dataEvent;
-        String time;
-         int starCount = 0;
-         Map<String, Boolean> stars = new HashMap<>();
+        public String uid;
+        public String categoryEvent;
+        public String nameEvent;
+        public String dataEvent;
+        public String time;
+        public int starCount = 0;
+        public Map<String, Boolean> stars = new HashMap<>();
 
         public Event() {
             // Default constructor required for calls to DataSnapshot.getValue(Post.class)

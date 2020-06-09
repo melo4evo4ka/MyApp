@@ -248,8 +248,15 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
             case R.id.drawer_menu_add_event:
                 startActivity(new Intent(StartActivity.this,EventDBActivity.class));
                 break;
-            case R.id.drawer_menu_all_events:
+            /*case R.id.drawer_menu_all_events:
                 startActivity(new Intent(StartActivity.this,EventListActivity.class));
+                break;
+
+
+             */
+            case R.id.drawer_menu_all_events1:
+
+                startActivity(new Intent(StartActivity.this,Start2Activity.class));
                 break;
             case R.id.drawer_menu_logout:
                 firebaseAuth.signOut();
@@ -291,10 +298,12 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
             case R.id.drawer_menu_add_event:
                 startActivity(new Intent(StartActivity.this,EventDBActivity.class));
                 break;
-            case R.id.drawer_menu_all_events:
+            /*case R.id.drawer_menu_all_events:
                 startActivity(new Intent(StartActivity.this,EventListActivity.class));
                 break;
+             */
             case R.id.drawer_menu_logout:
+
                 firebaseAuth.signOut();
                 startActivity(new Intent(StartActivity.this,MainActivity.class));
                 finish();
