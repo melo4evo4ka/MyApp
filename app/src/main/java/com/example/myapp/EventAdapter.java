@@ -24,7 +24,7 @@ public class EventAdapter extends FirebaseRecyclerAdapter<Event,EventAdapter.Eve
         holder.eventN.setText(event.getNameEvent());
         holder.eventStartData.setText(event.getDataEvent());
         holder.eventStartTime.setText(event.getTime());
-//        holder.event_count.setText(0);
+        holder.event_count.setText(event.getStarCount());
     }
 
     @NonNull

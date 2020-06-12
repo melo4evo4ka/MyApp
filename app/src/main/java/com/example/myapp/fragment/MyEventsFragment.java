@@ -11,7 +11,7 @@ public class MyEventsFragment extends EventListFragment {
 
     @Override
     public Query getQuery(DatabaseReference databaseReference) {
-        // All my posts
+        // All my events
         return databaseReference.child("user-events")
                 .child(getUid());
     }

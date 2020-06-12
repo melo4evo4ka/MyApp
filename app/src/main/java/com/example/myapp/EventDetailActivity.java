@@ -77,13 +77,6 @@ public class EventDetailActivity extends AppCompatActivity implements View.OnCli
         mCommentsReference = FirebaseDatabase.getInstance().getReference()
                 .child("event-comments").child(mEventKey);
 
-     /*   buttonEventComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                eventComment();
-            }
-        });
-       */
         recyclerEventComments1.setLayoutManager(new LinearLayoutManager(this));
     }
 

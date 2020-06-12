@@ -9,13 +9,13 @@ public class MyTopEventsFragment extends EventListFragment {
 
     @Override
     public Query getQuery(DatabaseReference databaseReference) {
-        // [START my_top_posts_query]
-        // My top posts by number of stars
+        // [START my_top_events_query]
+        // My top events by number of stars
         String myUserId = getUid();
-        Query myTopPostsQuery = databaseReference.child("user-events").child(myUserId)
+        Query myTopEventsQuery = databaseReference.child("user-events").child(myUserId)
                 .orderByChild("starCount");
-        // [END my_top_posts_query]
+        // [END my_top_events_query]
 
-        return myTopPostsQuery;
+        return myTopEventsQuery;
     }
 }

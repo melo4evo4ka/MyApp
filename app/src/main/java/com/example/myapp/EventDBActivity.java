@@ -76,7 +76,7 @@ public class EventDBActivity extends  BaseActivity  {
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month +1;
+                month = month + 1;
                 Log.d(TAG,"onDataSet: data" + dayOfMonth +" "+month+" "+year);
 
                 String date = dayOfMonth +"."+month+"."+year;
@@ -128,7 +128,7 @@ public class EventDBActivity extends  BaseActivity  {
         final String tvData = mDisplayDate.getText().toString();
         final String tvTime = mDisplayTime.getText().toString();
 
-        final int count = 15;
+        final int count = 0;
         if (TextUtils.isEmpty(evName)) {
             eventName.setError(REQUIRED);
             return;

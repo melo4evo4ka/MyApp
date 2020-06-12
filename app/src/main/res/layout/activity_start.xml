@@ -7,12 +7,9 @@
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity"
-    tools:viewBindingIgnore="true">
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/profile_bar_layout" />
-    <FrameLayout
+    tools:context=".StartActivity">
+
+        <FrameLayout
         android:id="@+id/fl_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,9 +28,47 @@
         app:menu="@menu/drawer_menu"
         app:headerLayout="@layout/handler"
         android:layout_gravity="start">
-
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/profile_bar_layout"/>
     </com.google.android.material.navigation.NavigationView>
 
+    <LinearLayout
+       android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+        <include
+            android:id="@+id/toolbar1"
+            layout="@layout/bar_layout"/>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark">
 
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabChats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ALL Events" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Events" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tabCalls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ALL Events" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+   </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

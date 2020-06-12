@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.myapp.Event;
 import com.example.myapp.EventDetailActivity;
@@ -38,7 +39,7 @@ public abstract class EventListFragment extends Fragment {
     private FirebaseRecyclerAdapter<Event, EventViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
-
+    private Button eventDelete;
     public EventListFragment() {}
 
     @Override
@@ -46,7 +47,6 @@ public abstract class EventListFragment extends Fragment {
                               Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.activity_event_list, container, false);
-
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END create_database_reference]
@@ -110,7 +110,7 @@ public abstract class EventListFragment extends Fragment {
                     public void onClick(View starView) {
                         // Need to write to both places the post is stored
                         DatabaseReference globalEventRef = mDatabase.child("events").child(eventRef.getKey());
-                        DatabaseReference userEventRef = mDatabase.child("user-enents").child(model.uid).child(eventRef.getKey());
+                        DatabaseReference userEventRef = mDatabase.child("user-events").child(model.uid).child(eventRef.getKey());
 
                         // Run two transactions
                         onStarClicked(globalEventRef);
@@ -122,9 +122,9 @@ public abstract class EventListFragment extends Fragment {
         mRecycler.setAdapter(mAdapter);
     }
 
-    // [START post_stars_transaction]
-    private void onStarClicked(DatabaseReference postRef) {
-        postRef.runTransaction(new Transaction.Handler() {
+    // [START event_stars_transaction]
+    private void onStarClicked(DatabaseReference eventRef) {
+        eventRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
                 Event p = mutableData.getValue(Event.class);
@@ -133,11 +133,11 @@ public abstract class EventListFragment extends Fragment {
                 }
 
                 if (p.stars.containsKey(getUid())) {
-                    // Unstar the post and remove self from stars
+                    // Unstar the event and remove self from stars
                     p.starCount = p.starCount - 1;
                     p.stars.remove(getUid());
                 } else {
-                    // Star the post and add self to stars
+                    // Star the event and add self to stars
                     p.starCount = p.starCount + 1;
                     p.stars.put(getUid(), true);
                 }
@@ -155,7 +155,7 @@ public abstract class EventListFragment extends Fragment {
             }
         });
     }
-    // [END post_stars_transaction]
+    // [END event_stars_transaction]
 
 
     @Override

@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.myapp.fragment.AllEventsFragment;
 import com.example.myapp.fragment.MyEventsFragment;
 import com.example.myapp.fragment.MyTopEventsFragment;
 
@@ -25,7 +26,7 @@ private int numOfTabs;
             case 1:
                 return new MyTopEventsFragment();
             case 2:
-                return new MyEventsFragment();
+                return new AllEventsFragment();
              //  return new Frag3();
             default: return null;
         }

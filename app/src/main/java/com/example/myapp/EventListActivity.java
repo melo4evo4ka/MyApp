@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,7 +34,7 @@ public class EventListActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
     }
-    @Override
+  @Override
     protected void onStart() {
         super.onStart();
         adapter.startListening();
