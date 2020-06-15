@@ -1,6 +1,7 @@
 package com.example.myapp.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -28,6 +29,12 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public abstract class EventListFragment extends Fragment {
 
     private static final String TAG = "EventListFragment";
@@ -40,6 +47,8 @@ public abstract class EventListFragment extends Fragment {
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
     private Button eventDelete;
+    private Calendar Current_date;
+
     public EventListFragment() {}
 
     @Override
@@ -78,19 +87,20 @@ public abstract class EventListFragment extends Fragment {
             @Override
             public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
+
                 return new EventViewHolder(inflater.inflate(R.layout.event_item, viewGroup, false));
             }
 
             @Override
             protected void onBindViewHolder(EventViewHolder viewHolder, int position, final Event model) {
                 final DatabaseReference eventRef = getRef(position);
-
-                // Set click listener for the whole post view
+                   // Set click listener for the whole post view
                 final String eventKey = eventRef.getKey();
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Launch PostDetailActivity
+
                         Intent intent = new Intent(getActivity(), EventDetailActivity.class);
                         intent.putExtra(EventDetailActivity.EXTRA_EVENT_KEY, eventKey);
                         startActivity(intent);
@@ -103,49 +113,68 @@ public abstract class EventListFragment extends Fragment {
                 } else {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
                 }
+                if (model.peoples.containsKey(getUid())) {
+                    viewHolder.btnAgreeEvent.setText("Уже записан");
+//                    viewHolder.itemView.setBackgroundColor(Integer.parseInt("#4CAF50"));
+                } else {
+                    viewHolder.btnAgreeEvent.setText("Пойду");
+                }
 
                 // Bind Post to ViewHolder, setting OnClickListener for the star button
-                viewHolder.bindToPost(model, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View starView) {
-                        // Need to write to both places the post is stored
-                        DatabaseReference globalEventRef = mDatabase.child("events").child(eventRef.getKey());
-                        DatabaseReference userEventRef = mDatabase.child("user-events").child(model.uid).child(eventRef.getKey());
+                try {
+                    viewHolder.bindToPost(model, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View starView) {
+                            // Need to write to both places the post is stored
+                            DatabaseReference globalEventRef = mDatabase.child("events").child(eventRef.getKey());
+                            DatabaseReference userEventRef = mDatabase.child("user-events").child(model.uid).child(eventRef.getKey());
 
-                        // Run two transactions
-                        onStarClicked(globalEventRef);
-                        onStarClicked(userEventRef);
-                    }
-                });
+                            // Run two transactions
+                            onStarClicked(globalEventRef);
+                            onStarClicked(userEventRef);
+                        }
+                    }, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            DatabaseReference globalEventRef = mDatabase.child("events").child(eventRef.getKey());
+                            DatabaseReference userEventRef = mDatabase.child("user-events").child(model.uid).child(eventRef.getKey());
+                            onCountClicked(globalEventRef);
+                            onCountClicked(userEventRef);
+                        }
+                    });
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         };
         mRecycler.setAdapter(mAdapter);
     }
 
+
     // [START event_stars_transaction]
     private void onStarClicked(DatabaseReference eventRef) {
-        eventRef.runTransaction(new Transaction.Handler() {
-            @Override
-            public Transaction.Result doTransaction(MutableData mutableData) {
-                Event p = mutableData.getValue(Event.class);
-                if (p == null) {
-                    return Transaction.success(mutableData);
-                }
+                        eventRef.runTransaction(new Transaction.Handler() {
+                            @Override
+                            public Transaction.Result doTransaction(MutableData mutableData) {
+                                Event p = mutableData.getValue(Event.class);
+                                if (p == null) {
+                                    return Transaction.success(mutableData);
+                                }
 
-                if (p.stars.containsKey(getUid())) {
-                    // Unstar the event and remove self from stars
-                    p.starCount = p.starCount - 1;
-                    p.stars.remove(getUid());
-                } else {
-                    // Star the event and add self to stars
-                    p.starCount = p.starCount + 1;
-                    p.stars.put(getUid(), true);
-                }
+                                if (p.stars.containsKey(getUid())) {
+                                    // Unstar the event and remove self from stars
+                                    p.starCount = p.starCount - 1;
+                                    p.stars.remove(getUid());
+                                } else {
+                                    // Star the event and add self to stars
+                                    p.starCount = p.starCount + 1;
+                                    p.stars.put(getUid(), true);
+                                }
 
-                // Set value and report transaction success
-                mutableData.setValue(p);
-                return Transaction.success(mutableData);
-            }
+                                // Set value and report transaction success
+                                mutableData.setValue(p);
+                                return Transaction.success(mutableData);
+                            }
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean committed,
@@ -157,7 +186,38 @@ public abstract class EventListFragment extends Fragment {
     }
     // [END event_stars_transaction]
 
+    private void onCountClicked(DatabaseReference eventRef) {
+        eventRef.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                Event e = mutableData.getValue(Event.class);
+                if (e == null) {
+                    return Transaction.success(mutableData);
+                }
 
+                if (e.peoples.containsKey(getUid())) {
+                    // Unstar the event and remove self from stars
+                    e.peopleCount = e.peopleCount - 1;
+                    e.peoples.remove(getUid());
+                } else {
+                    // Star the event and add self to stars
+                    e.peopleCount = e.peopleCount + 1;
+                    e.peoples.put(getUid(), true);
+                }
+
+                // Set value and report transaction success
+                mutableData.setValue(e);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean committed,
+                                   DataSnapshot currentData) {
+                // Transaction completed
+                Log.d(TAG, "eventTransaction:onComplete:" + databaseError);
+            }
+        });
+    }
     @Override
     public void onStart() {
         super.onStart();

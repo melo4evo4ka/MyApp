@@ -14,18 +14,21 @@ public class Event {
         public String time;
         public int starCount = 0;
         public Map<String, Boolean> stars = new HashMap<>();
+        public int peopleCount = 0;
+        public Map<String, Boolean> peoples = new HashMap<>();
 
-        public Event() {
+    public Event() {
             // Default constructor required for calls to DataSnapshot.getValue(Post.class)
         }
 
- public Event(String uid, String categoryEvent, String nameEvent, String dataEvent, String time, int starCount) {
+ public Event(String uid, String categoryEvent, String nameEvent, String dataEvent, String time, int starCount, int peopleCount) {
         this.uid = uid;
         this.categoryEvent = categoryEvent;
         this.nameEvent = nameEvent;
         this.dataEvent = dataEvent;
         this.time = time;
         this.starCount = starCount;
+        this.peopleCount = peopleCount;
     }
 
            // [START post_to_map]

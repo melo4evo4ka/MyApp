@@ -22,11 +22,11 @@ private int numOfTabs;
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new MyEventsFragment();
-            case 1:
-                return new MyTopEventsFragment();
-            case 2:
                 return new AllEventsFragment();
+            case 1:
+                return new MyEventsFragment();
+            case 2:
+                return new MyTopEventsFragment();
              //  return new Frag3();
             default: return null;
         }

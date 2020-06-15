@@ -24,7 +24,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,8 +50,8 @@ public class EventDBActivity extends  BaseActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eventdb);
         eventName = findViewById(R.id.ed_event_name);
-        eventCategory = findViewById(R.id.ed_event_category);
-        eventStartData = findViewById(R.id.start_date);
+       // eventCategory = findViewById(R.id.ed_event_category);
+        //eventStartData = findViewById(R.id.start_date);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         addPost = findViewById(R.id.addPost);
@@ -93,15 +96,20 @@ public class EventDBActivity extends  BaseActivity  {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(EventDBActivity.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String editTextTimeParam = hourOfDay + " : " + minute;
-                        mDisplayTime.setText(editTextTimeParam);
+                        String dateAdd = hourOfDay + ":" +minute;
+                        try {
+                            Date date1=new SimpleDateFormat("HH:mm").parse(dateAdd);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        mDisplayTime.setText(dateAdd);
                     }
                 },mHour, mMinute, false);
                 timePickerDialog.show();
                 }
 
         });
-
 
         spinner = findViewById(R.id.sp_types);
         ArrayAdapter<String> adapterSpin = new ArrayAdapter<>(this,
@@ -112,7 +120,7 @@ public class EventDBActivity extends  BaseActivity  {
         addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                eventName.setText(spinner.getSelectedItem().toString());
+               // eventCategory.setText(spinner.getSelectedItem().toString());
                 submitEvent();
             }
         });
@@ -121,14 +129,15 @@ public class EventDBActivity extends  BaseActivity  {
 
     private void submitEvent() {
 
-        final String evName = eventName.getText().toString();
+
         final String evCat = spinner.getSelectedItem().toString();
-        //final String evCat = eventCategory.getText().toString();
-        //final String evStartData = eventStartData.getText().toString();
+        final String evName = eventName.getText().toString();
         final String tvData = mDisplayDate.getText().toString();
         final String tvTime = mDisplayTime.getText().toString();
 
         final int count = 0;
+        final int countPeolpe = 0;
+
         if (TextUtils.isEmpty(evName)) {
             eventName.setError(REQUIRED);
             return;
@@ -138,12 +147,7 @@ public class EventDBActivity extends  BaseActivity  {
             eventCategory.setError(REQUIRED);
             return;
         }
-     /*
-        if (TextUtils.isEmpty(evStartData)) {
-            eventStartData.setError(REQUIRED);
-            return;
-        }
-     */
+
         if (TextUtils.isEmpty(tvData)) {
             mDisplayDate.setError(REQUIRED);
             return;
@@ -172,7 +176,7 @@ public class EventDBActivity extends  BaseActivity  {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeNewPost(userId, evCat, evName, tvData, tvTime, count);
+                            writeNewPost(userId, evCat, evName, tvData, tvTime, count, countPeolpe);
                         }
                         // Finish this Activity, back to the stream
                         // setEditingEnabled(true);
@@ -188,13 +192,12 @@ public class EventDBActivity extends  BaseActivity  {
     }
 
 
-    private void writeNewPost(String userId, String evCat, String evNam, String evStartData, String time,int count) {
+    private void writeNewPost(String userId, String evCat, String evNam, String evStartData, String time,int starcount,int countPeople) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("events").push().getKey();
-        Event event = new Event(userId, evCat, evNam,evStartData,time, count);
+        Event event = new Event(userId, evCat, evNam,evStartData,time, starcount, countPeople);
         Map<String, Object> postValues = event.toMap();
-
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/events/" + key, postValues);
         childUpdates.put("/user-events/" + userId + "/" + key, postValues);

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.app.TaskStackBuilder;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -89,16 +90,18 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        final Toolbar toolbar = findViewById(R.id.toolbar1);
-        setSupportActionBar(toolbar);
+        final Toolbar toolbar1 = findViewById(R.id.toolbar1);
+        setSupportActionBar(toolbar1);
         getSupportActionBar().setTitle("");
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        //navigationView.setNavigationItemSelectedListener(this);
         imagesList = new ArrayList<>();
         userName = findViewById(R.id.username);
         circleImageView = findViewById(R.id.profileImage);
@@ -108,7 +111,6 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
         tabChats = findViewById(R.id.tabChats);
         tabStatus = findViewById(R.id.tabStatus);
         tabCalls = findViewById(R.id.tabCalls);
-
         viewPager = findViewById(R.id.viewPager);
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
@@ -122,22 +124,22 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
                 if (tab.getPosition() == 1) {
-                    toolbar.setBackgroundColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
+//                    toolbar.setBackgroundColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
                     tabLayout.setBackgroundColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         getWindow().setStatusBarColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
                     }
-                   
+
 
                 } else if (tab.getPosition() == 2) {
-                    toolbar.setBackgroundColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
+ //                   toolbar.setBackgroundColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
                     tabLayout.setBackgroundColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         getWindow().setStatusBarColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
 
                     }
                 } else {
-                    toolbar.setBackgroundColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
+ //                   toolbar.setBackgroundColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
                     tabLayout.setBackgroundColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         getWindow().setStatusBarColor(ContextCompat.getColor(StartActivity.this, R.color.colorPrimaryDark));
@@ -311,9 +313,8 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
                 startActivity(new Intent(StartActivity.this,EventDBActivity.class));
                 break;
             case R.id.drawer_menu_all_events:
-                startActivity(new Intent(StartActivity.this,EventListActivity.class));
+                startActivity(new Intent(StartActivity.this,StartActivity.class));
                 break;
-
             case R.id.drawer_menu_logout:
                 firebaseAuth.signOut();
                 startActivity(new Intent(StartActivity.this,MainActivity.class));
@@ -342,11 +343,14 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
         });
     }
 
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        if (mToggle.onOptionsItemSelected(item)){
+            return true;
+        }
         switch (id){
             case R.id.drawer_menu_change_psw:
                 startActivity(new Intent(StartActivity.this,ChangePasswordActivity.class));
@@ -355,16 +359,13 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
                 startActivity(new Intent(StartActivity.this,EventDBActivity.class));
                 break;
             case R.id.drawer_menu_all_events:
-                startActivity(new Intent(StartActivity.this,EventListActivity.class));
+                startActivity(new Intent(StartActivity.this,StartActivity.class));
                 break;
-
             case R.id.drawer_menu_logout:
-
                 firebaseAuth.signOut();
                 startActivity(new Intent(StartActivity.this,MainActivity.class));
                 finish();
         }
         return true;
-
     }
 }
