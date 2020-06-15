@@ -5,5 +5,9 @@
     <color name="colorPrimaryDark">#1552EC</color>
     <color name="colorAccent">#FFFF</color>
     <color name="darker_gray">#3C3838</color>
-    <color name="yellow">#4CAF50</color>
+    <color name="colorOther">#4CAF50</color>
+    <color name="colorSport">#E13146</color>
+    <color name="colorMeeting">#CDDC39</color>
+    <color name="colorParty">#B32BDC</color>
+
 </resources>

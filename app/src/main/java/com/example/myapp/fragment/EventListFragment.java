@@ -198,10 +198,13 @@ public abstract class EventListFragment extends Fragment {
                 if (e.peoples.containsKey(getUid())) {
                     // Unstar the event and remove self from stars
                     e.peopleCount = e.peopleCount - 1;
+                    e.peopleMax = e.peopleMax + 1;
                     e.peoples.remove(getUid());
+
                 } else {
                     // Star the event and add self to stars
                     e.peopleCount = e.peopleCount + 1;
+                    e.peopleMax = e.peopleMax - 1;
                     e.peoples.put(getUid(), true);
                 }
 

@@ -1,24 +1,29 @@
 package com.example.myapp.viewholder;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapp.Event;
 import com.example.myapp.R;
+import com.example.myapp.StartActivity;
 
-import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
+
+
+import static com.example.myapp.R.*;
+
 
 public class EventViewHolder extends RecyclerView.ViewHolder {
 
@@ -32,6 +37,8 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
     public TextView timeView;
     public TextView timeEndView;
     public TextView eventPeople;
+    public TextView eventMaxPeople;
+
     public Button btnDeleteEvent;
     public Button btnAgreeEvent;
     public LinearLayout eventItem;
@@ -40,19 +47,23 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         //titleView = itemView.findViewById(R.id.tv_event_name);
-        eventCategory = itemView.findViewById(R.id.tv_event_cat);
+        eventCategory = itemView.findViewById(id.tv_event_cat);
         //authorView = itemView.findViewById(R.id.username);
-        eventName= itemView.findViewById(R.id.tv_event_name);
-        starView = itemView.findViewById(R.id.star);
+        eventName= itemView.findViewById(id.tv_event_name);
+        starView = itemView.findViewById(id.star);
        // btnDeleteEvent = itemView.findViewById(R.id.btn_del_event);
-        btnAgreeEvent = itemView.findViewById(R.id.btn_agree);
-        numStarsView = itemView.findViewById(R.id.tv_event_count);
-        bodyView = itemView.findViewById(R.id.tv_event_date);
-        timeView = itemView.findViewById(R.id.tv_event_time);
-        eventItem = itemView.findViewById(R.id.itemEvent);
-        timeEndView = itemView.findViewById(R.id.tv_date_end);
-        eventPeople = itemView.findViewById(R.id.tv_people);
+        btnAgreeEvent = itemView.findViewById(id.btn_agree);
+        numStarsView = itemView.findViewById(id.tv_event_count);
+        bodyView = itemView.findViewById(id.tv_event_date);
+        timeView = itemView.findViewById(id.tv_event_time);
+        eventItem = itemView.findViewById(id.itemEvent);
+        timeEndView = itemView.findViewById(id.tv_date_end);
+        eventPeople = itemView.findViewById(id.tv_people);
+        eventMaxPeople = itemView.findViewById(id.tvMaxPeoples);
+
     }
+
+
 
     public void bindToPost(Event event, View.OnClickListener starClickListener, View.OnClickListener agreeEventClickListener) throws ParseException {
         eventName.setText(event.nameEvent);
@@ -61,14 +72,30 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         bodyView.setText(event.dataEvent);
         timeView.setText(event.time);
         eventPeople.setText(String.valueOf(event.peopleCount));
+        eventMaxPeople.setText(String.valueOf(event.peopleMax));
+
         starView.setOnClickListener(starClickListener);
         btnAgreeEvent.setOnClickListener(agreeEventClickListener);
+
         currentData();
 
-        if (eventCategory.getText()=="СПОРТ"){
-            eventItem.setBackgroundColor(Color.parseColor("#3C3838"));
+        if (eventCategory.getText().equals("Sport"))
+        {
+            eventItem.setBackgroundResource(drawable.white_border);
         }
-        //btnDeleteEvent.setOnClickListener(delEventClickListener);
+        if(eventCategory.getText().equals("Meeting"))
+        {
+            eventItem.setBackgroundResource(drawable.green_border);
+        }
+        if(eventCategory.getText().equals("Party"))
+        {
+            eventItem.setBackgroundResource(drawable.yellow_border);
+        }
+        if(eventCategory.getText().equals("Other"))
+        {
+            eventItem.setBackgroundResource(drawable.pink_border);
+        }
+
 
     }
 

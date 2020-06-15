@@ -16,12 +16,13 @@ public class Event {
         public Map<String, Boolean> stars = new HashMap<>();
         public int peopleCount = 0;
         public Map<String, Boolean> peoples = new HashMap<>();
+        public int peopleMax;
 
     public Event() {
             // Default constructor required for calls to DataSnapshot.getValue(Post.class)
         }
 
- public Event(String uid, String categoryEvent, String nameEvent, String dataEvent, String time, int starCount, int peopleCount) {
+ public Event(String uid, String categoryEvent, String nameEvent, String dataEvent, String time, int starCount, int peopleCount, int peopleMax) {
         this.uid = uid;
         this.categoryEvent = categoryEvent;
         this.nameEvent = nameEvent;
@@ -29,6 +30,7 @@ public class Event {
         this.time = time;
         this.starCount = starCount;
         this.peopleCount = peopleCount;
+        this.peopleMax = peopleMax;
     }
 
            // [START post_to_map]
@@ -42,6 +44,7 @@ public class Event {
             result.put("time", time);
             result.put("starCount", starCount);
             result.put("stars", stars);
+            result.put("peopleMax", peopleMax);
             return result;
         }
         // [END post_to_map]

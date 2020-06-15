@@ -36,7 +36,7 @@ public class EventDBActivity extends  BaseActivity  {
     private static final String TAG = "NewEventActivity";
     private EditText eventName;
     private EditText eventCategory;
-    private EditText eventStartData;
+    private EditText eventMaxPeople;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private Button addPost;
@@ -50,13 +50,14 @@ public class EventDBActivity extends  BaseActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eventdb);
         eventName = findViewById(R.id.ed_event_name);
-       // eventCategory = findViewById(R.id.ed_event_category);
+        eventMaxPeople = findViewById(R.id.count_people);
         //eventStartData = findViewById(R.id.start_date);
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         addPost = findViewById(R.id.addPost);
         mDisplayDate = findViewById(R.id.tvData);
         mDisplayTime = findViewById(R.id.tvTime);
+
         mDisplayDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,8 +66,6 @@ public class EventDBActivity extends  BaseActivity  {
                 int year = cal.get(Calendar.YEAR);
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
-                //int hour = cal.get(Calendar.HOUR_OF_DAY);
-                //int minute = cal.get(Calendar.MINUTE);
 
                 DatePickerDialog dialog = new DatePickerDialog(EventDBActivity.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
@@ -134,9 +133,11 @@ public class EventDBActivity extends  BaseActivity  {
         final String evName = eventName.getText().toString();
         final String tvData = mDisplayDate.getText().toString();
         final String tvTime = mDisplayTime.getText().toString();
+        String sTextFromET = eventMaxPeople.getText().toString();
+        final int tvMaxPeolpes = new Integer(sTextFromET).intValue();
 
         final int count = 0;
-        final int countPeolpe = 0;
+        final int countPeople = 0;
 
         if (TextUtils.isEmpty(evName)) {
             eventName.setError(REQUIRED);
@@ -176,7 +177,7 @@ public class EventDBActivity extends  BaseActivity  {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeNewPost(userId, evCat, evName, tvData, tvTime, count, countPeolpe);
+                            writeNewPost(userId, evCat, evName, tvData, tvTime, count, countPeople,tvMaxPeolpes);
                         }
                         // Finish this Activity, back to the stream
                         // setEditingEnabled(true);
@@ -192,11 +193,11 @@ public class EventDBActivity extends  BaseActivity  {
     }
 
 
-    private void writeNewPost(String userId, String evCat, String evNam, String evStartData, String time,int starcount,int countPeople) {
+    private void writeNewPost(String userId, String evCat, String evNam, String evStartData, String time,int starcount,int countPeople,int tvMaxPeolpes) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("events").push().getKey();
-        Event event = new Event(userId, evCat, evNam,evStartData,time, starcount, countPeople);
+        Event event = new Event(userId, evCat, evNam,evStartData,time, starcount, countPeople,tvMaxPeolpes);
         Map<String, Object> postValues = event.toMap();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/events/" + key, postValues);
