@@ -65,7 +65,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private TextView userName;
-    private CircleImageView circleImageView;
+    public CircleImageView circleImageView;
     private FirebaseUser firebaseUser;
     private FirebaseAuth firebaseAuth;
     private ImageRecyclerAdapter imageRecyclerAdapter;
@@ -78,6 +78,7 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
     private UsersData usersData;
     private DrawerLayout mDrawerLayout;
     public Toolbar toolbar;
+    public Toolbar toolbar1;
     public TabLayout tabLayout;
     public TabItem tabChats,tabStatus,tabCalls;
     public ViewPager viewPager;
@@ -90,7 +91,9 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        final Toolbar toolbar1 = findViewById(R.id.toolbar1);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar1 = findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar1);
         getSupportActionBar().setTitle("");
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
@@ -100,8 +103,6 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        //NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        //navigationView.setNavigationItemSelectedListener(this);
         imagesList = new ArrayList<>();
         userName = findViewById(R.id.username);
         circleImageView = findViewById(R.id.profileImage);
@@ -118,6 +119,38 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
 
         pageAdapter = new PageAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
         viewPager.setAdapter(pageAdapter);
+
+
+        circleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+                builder.setCancelable(true);
+                View mView = LayoutInflater.from(StartActivity.this).inflate(R.layout.select_image_layout,null);
+                RecyclerView recyclerView = mView.findViewById(R.id.recycleView);
+                collectOldImages();
+                recyclerView.setLayoutManager(new GridLayoutManager(StartActivity.this,3));
+                recyclerView.setHasFixedSize(true);
+
+                imageRecyclerAdapter = new ImageRecyclerAdapter(imagesList,StartActivity.this);
+                recyclerView.setAdapter(imageRecyclerAdapter);
+                imageRecyclerAdapter.notifyDataSetChanged();
+
+                final Button openImage = mView.findViewById(R.id.openImages);
+                openImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openImg();
+                    }
+                });
+                builder.setView(mView);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
+
+
+
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -177,34 +210,6 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
             }
         });
 
-
-        circleImageView.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
-            builder.setCancelable(true);
-            View mView = LayoutInflater.from(StartActivity.this).inflate(R.layout.select_image_layout,null);
-            RecyclerView recyclerView = mView.findViewById(R.id.recycleView);
-            collectOldImages();
-            recyclerView.setLayoutManager(new GridLayoutManager(StartActivity.this,3));
-            recyclerView.setHasFixedSize(true);
-
-            imageRecyclerAdapter = new ImageRecyclerAdapter(imagesList,StartActivity.this);
-            recyclerView.setAdapter(imageRecyclerAdapter);
-            imageRecyclerAdapter.notifyDataSetChanged();
-
-            final Button openImage = mView.findViewById(R.id.openImages);
-            openImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openImg();
-                }
-            });
-            builder.setView(mView);
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-    });
 
     }
 
@@ -349,23 +354,24 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (mToggle.onOptionsItemSelected(item)){
+            switch (id){
+                case R.id.drawer_menu_change_psw:
+                    startActivity(new Intent(StartActivity.this,ChangePasswordActivity.class));
+                    break;
+                case R.id.drawer_menu_add_event:
+                    startActivity(new Intent(StartActivity.this,EventDBActivity.class));
+                    break;
+                case R.id.drawer_menu_all_events:
+                    startActivity(new Intent(StartActivity.this,StartActivity.class));
+                    break;
+                case R.id.drawer_menu_logout:
+                    firebaseAuth.signOut();
+                    startActivity(new Intent(StartActivity.this,MainActivity.class));
+                    finish();
+            }
             return true;
         }
-        switch (id){
-            case R.id.drawer_menu_change_psw:
-                startActivity(new Intent(StartActivity.this,ChangePasswordActivity.class));
-                break;
-            case R.id.drawer_menu_add_event:
-                startActivity(new Intent(StartActivity.this,EventDBActivity.class));
-                break;
-            case R.id.drawer_menu_all_events:
-                startActivity(new Intent(StartActivity.this,StartActivity.class));
-                break;
-            case R.id.drawer_menu_logout:
-                firebaseAuth.signOut();
-                startActivity(new Intent(StartActivity.this,MainActivity.class));
-                finish();
-        }
+
         return true;
     }
 }

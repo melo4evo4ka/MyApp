@@ -6,5 +6,7 @@
     android:layout_height="230dp"
     android:background="@color/colorPrimaryDark"
     android:paddingTop="20dp">
-
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/profile_bar_layout"/>
 </LinearLayout>
