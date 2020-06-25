@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/drawer_menu_change_psw" android:title="Change password"/>
+    <item android:id="@+id/drawer_menu_change_psw" android:title="Change password" android:icon="@drawable/ic_vpn_key_black_24dp"/>
     <item android:id="@+id/drawer_menu_add_event" android:title="Add Event" android:icon="@drawable/ic_event_black_24dp"/>
     <item android:id="@+id/drawer_menu_all_events" android:title="All Events" android:icon="@drawable/ic_dashboard_black_24dp"/>
     <item android:id="@+id/ddd4" android:title="Setting" android:icon="@drawable/ic_settings_black_24dp"/>

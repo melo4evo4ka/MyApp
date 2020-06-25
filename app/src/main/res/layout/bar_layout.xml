@@ -8,5 +8,4 @@
     style="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="@style/menuStyle"
     android:id="@+id/toolbar">
-
 </androidx.appcompat.widget.Toolbar>

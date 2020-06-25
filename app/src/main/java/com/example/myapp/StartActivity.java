@@ -6,6 +6,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.app.TaskStackBuilder;
 import android.content.Intent;
@@ -18,9 +19,11 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,6 +80,7 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
     private StorageReference storageReference;
     private UsersData usersData;
     private DrawerLayout mDrawerLayout;
+    public NavigationView navigationView;
     public Toolbar toolbar;
     public Toolbar toolbar1;
     public TabLayout tabLayout;
@@ -86,23 +90,28 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
 
     private ActionBarDrawerToggle mToggle;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar1 = findViewById(R.id.toolbar1);
+        toolbar1 = findViewById(R.id.toolbar_profile);
         setSupportActionBar(toolbar1);
+
+        toolbar = findViewById(R.id.toolbar3);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
-        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close);
-        mDrawerLayout.addDrawerListener(mToggle);
-        mToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        mDrawerLayout = findViewById(R.id.drawer);
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.bringToFront();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, toolbar, R.string.open, R.string.close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
         navigationView.setNavigationItemSelectedListener(this);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         imagesList = new ArrayList<>();
         userName = findViewById(R.id.username);
         circleImageView = findViewById(R.id.profileImage);
@@ -116,7 +125,6 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
         storageReference = FirebaseStorage.getInstance().getReference("profile_images");
-
         pageAdapter = new PageAdapter(getSupportFragmentManager(),tabLayout.getTabCount());
         viewPager.setAdapter(pageAdapter);
 
@@ -147,9 +155,8 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             }
+
         });
-
-
 
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -312,17 +319,17 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
         }
         switch (id){
             case R.id.drawer_menu_change_psw:
-                startActivity(new Intent(StartActivity.this,ChangePasswordActivity.class));
+                startActivity(new Intent(this,ChangePasswordActivity.class));
                 break;
             case R.id.drawer_menu_add_event:
-                startActivity(new Intent(StartActivity.this,EventDBActivity.class));
+                startActivity(new Intent(this,EventDBActivity.class));
                 break;
             case R.id.drawer_menu_all_events:
-                startActivity(new Intent(StartActivity.this,StartActivity.class));
+                startActivity(new Intent(this,StartActivity.class));
                 break;
             case R.id.drawer_menu_logout:
                 firebaseAuth.signOut();
-                startActivity(new Intent(StartActivity.this,MainActivity.class));
+                startActivity(new Intent(this,MainActivity.class));
                 finish();
         }
         return true;
@@ -351,27 +358,23 @@ public class StartActivity extends AppCompatActivity implements NavigationView.O
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (mToggle.onOptionsItemSelected(item)){
-            switch (id){
-                case R.id.drawer_menu_change_psw:
-                    startActivity(new Intent(StartActivity.this,ChangePasswordActivity.class));
-                    break;
-                case R.id.drawer_menu_add_event:
-                    startActivity(new Intent(StartActivity.this,EventDBActivity.class));
-                    break;
-                case R.id.drawer_menu_all_events:
-                    startActivity(new Intent(StartActivity.this,StartActivity.class));
-                    break;
-                case R.id.drawer_menu_logout:
-                    firebaseAuth.signOut();
-                    startActivity(new Intent(StartActivity.this,MainActivity.class));
-                    finish();
-            }
-            return true;
-        }
 
+        switch (id){
+            case R.id.drawer_menu_change_psw:
+                startActivity(new Intent(this,ChangePasswordActivity.class));
+                break;
+            case R.id.drawer_menu_add_event:
+                startActivity(new Intent(this,EventDBActivity.class));
+                break;
+            case R.id.drawer_menu_all_events:
+                startActivity(new Intent(this,StartActivity.class));
+                break;
+            case R.id.drawer_menu_logout:
+                firebaseAuth.signOut();
+                startActivity(new Intent(this,MainActivity.class));
+                finish();
+        }
         return true;
     }
 }
